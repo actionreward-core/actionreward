@@ -7,6 +7,7 @@ import { routes } from "./routes";
 import "./index.css";
 
 // Providers
+import { ContractContextProvider } from "./providers/ContractContextProvider.tsx";
 import { ToastifyProvider } from "./providers/ToastifyProvider";
 
 // Consts
@@ -18,11 +19,13 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ToastifyProvider>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </ToastifyProvider>
+    <ContractContextProvider>
+      <ToastifyProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </ToastifyProvider>
+    </ContractContextProvider>
   </React.StrictMode>,
 );
