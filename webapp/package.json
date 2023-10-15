@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "gen": "wagmi generate",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "dev": "vite",
@@ -48,6 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "@vitejs/plugin-react": "^4.0.1",
+    "@wagmi/cli": "^1.5.2",
     "autoprefixer": "^10.4.14",
     "daisyui": "^3.2.1",
     "esbuild": "0.16.5",
