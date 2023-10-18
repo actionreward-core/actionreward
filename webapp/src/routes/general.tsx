@@ -2,19 +2,33 @@ import { RouteObject } from "react-router-dom";
 import { PATHS } from "../consts/paths";
 
 // Pages
-import { ConfigureContractPage } from "../pages/ConfigureContractPage.tsx";
 import { IndexPage } from "../pages/Index";
 import { AppIndexPage } from "../pages/app/Index";
+import { AppLoginPage } from "../pages/app/Login.tsx";
+import { AppSignupPage } from "../pages/app/Signup.tsx";
+import { AppProjectsCreate } from "../pages/app/ProjectsCreate.tsx";
 
 export const general: RouteObject[] = [
   // ROUTES - START
   {
-    path: PATHS.configureContract,
-    element: <ConfigureContractPage />
-  },
-  {
     path: PATHS.index,
     element: <IndexPage />,
+  },
+  {
+    path: PATHS.app,
+    element: <AppIndexPage />,
+  },
+  {
+    path: PATHS.appLogin,
+    element: <AppLoginPage />,
+  },
+  {
+    path: PATHS.appSignup,
+    element: <AppSignupPage />,
+  },
+  {
+    path: "/app/projects/create",
+    element: <AppProjectsCreate />,
   },
   {
     path: PATHS.app,

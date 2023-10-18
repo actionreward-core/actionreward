@@ -2,6 +2,9 @@ export const PATHS = {
   // PATHS - START
   index: '/',
   app: '/app',
-  configureContract: '/configure-contract',
+  appLogin: '/app/login',
+  appSignup: '/app/signup',
+  appProjects: '/app/projects',
+  appProjectsCreate: '/app/projects/create',
   // PATHS - END
 } as const;
