@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
+import { ProjectsModule } from './projects/projects.module';
+import { AuthModule } from './auth/auth.module';
 
 // IMPORTS - START
 // IMPORTS - END
@@ -7,7 +9,9 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     // MODULE IMPORTS - START
+    AuthModule,
     UsersModule,
+    ProjectsModule,
     // MODULE IMPORTS - END
   ],
   controllers: [
