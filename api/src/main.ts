@@ -10,6 +10,8 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   // APP SETUP - START
   const config = new DocumentBuilder()
     .setTitle('ActionReward API Documentation')

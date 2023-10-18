@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { UsersModule } from './users/users.module';
 
 // IMPORTS - START
 // IMPORTS - END
@@ -6,6 +7,7 @@ import { Module } from '@nestjs/common';
 @Module({
   imports: [
     // MODULE IMPORTS - START
+    UsersModule,
     // MODULE IMPORTS - END
   ],
   controllers: [

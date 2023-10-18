@@ -10,4 +10,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           String    @id @default(uuid())
+  firstName    String
+  lastName     String
+  email        String    @unique
+  passwordHash String
+  projects     Project[]
+}
 
+model Project {
+  id            String                @id @default(uuid())
+  ownerId       String
+  owner         User                  @relation(fields: [ownerId], references: [id])
+  name          String
+  accessToken   String                @unique
+  actionSchemas ProjectActionSchema[]
+  users         ProjectUser[]
+}
+
+model ProjectActionSchema {
+  id        String          @id @default(uuid())
+  projectId String
+  project   Project         @relation(fields: [projectId], references: [id])
+  name      String
+  key       String
+  data      Json?
+  actions   ProjectAction[]
+
+  @@unique([projectId, key])
+}
+
+model ProjectUser {
+  id            String          @id @default(uuid())
+  projectId     String
+  project       Project         @relation(fields: [projectId], references: [id])
+  userId        String
+  did           String
+  ProjectAction ProjectAction[]
+
+  @@unique([projectId, userId])
+}
+
+model ProjectAction {
+  id                    String              @id @default(uuid())
+  projectUserId         String
+  user                  ProjectUser         @relation(fields: [projectUserId], references: [id])
+  projectActionSchemaId String
+  schema                ProjectActionSchema @relation(fields: [projectActionSchemaId], references: [id])
+}
