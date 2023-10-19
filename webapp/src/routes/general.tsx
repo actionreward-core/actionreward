@@ -6,7 +6,8 @@ import { IndexPage } from "../pages/Index";
 import { AppIndexPage } from "../pages/app/Index";
 import { AppLoginPage } from "../pages/app/Login.tsx";
 import { AppSignupPage } from "../pages/app/Signup.tsx";
-import { AppProjectsCreate } from "../pages/app/ProjectsCreate.tsx";
+import { AppProjectsCreate } from "../pages/app/projects/ProjectsCreate.tsx";
+import { ProjectsIndex } from "../pages/app/projects/Index.tsx";
 
 export const general: RouteObject[] = [
   // ROUTES - START
@@ -25,6 +26,10 @@ export const general: RouteObject[] = [
   {
     path: PATHS.appSignup,
     element: <AppSignupPage />,
+  },
+  {
+    path: "/app/projects",
+    element: <ProjectsIndex />,
   },
   {
     path: "/app/projects/create",

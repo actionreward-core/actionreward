@@ -30,7 +30,7 @@ export const Sidebar: FC<SidebarProps> = ({ open, setOpen }) => {
       <>
         <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
           <div className="flex-shrink-0 flex items-center px-4">
-            <img className="h-8 w-auto" src={Logo} alt="Workflow" />
+            <img className="h-9 w-auto" src={Logo} alt="Workflow" />
           </div>
           <nav className="mt-5 px-2 space-y-1">
             {navigation.map((item) => (
@@ -40,8 +40,8 @@ export const Sidebar: FC<SidebarProps> = ({ open, setOpen }) => {
                 className={classNames(
                   "group flex items-center px-2 py-2 text-base font-medium rounded-md",
                   item.path === pathname
-                    ? "bg-primary-focus text-primary-content"
-                    : "text-primary-content hover:bg-primary-focus/40 hover:text-primary-content"
+                    ? "text-primary bg-gray-100"
+                    : "text-gray-400 hover:bg-gray-100/80 hover:text-primary hover:opacity-70"
                 )}
               >
                 <item.icon
@@ -53,7 +53,7 @@ export const Sidebar: FC<SidebarProps> = ({ open, setOpen }) => {
             ))}
           </nav>
         </div>
-        <div className="flex-shrink-0 flex bg-primary-focus p-4 text-white">
+        <div className="flex-shrink-0 flex border-t border-t-gray-200 p-4 text-white">
           TODO: Add User Info
         </div>
       </>
@@ -89,7 +89,7 @@ export const Sidebar: FC<SidebarProps> = ({ open, setOpen }) => {
             leaveFrom="translate-x-0"
             leaveTo="-translate-x-full"
           >
-            <div className="relative flex-1 flex flex-col max-w-xs w-full bg-primary">
+            <div className="relative flex-1 flex flex-col max-w-xs w-full">
               <Transition.Child
                 as={Fragment}
                 enter="ease-in-out duration-300"
@@ -119,9 +119,9 @@ export const Sidebar: FC<SidebarProps> = ({ open, setOpen }) => {
         </Dialog>
       </Transition.Root>
 
-      <div className="hidden md:flex md:flex-shrink-0">
+      <div className="hidden md:flex md:flex-shrink-0 border-r border-r-gray-200">
         <div className="flex flex-col w-64">
-          <div className="flex flex-col h-0 flex-1 bg-primary">
+          <div className="flex flex-col h-0 flex-1 bg-white">
             {renderMenuContent()}
           </div>
         </div>

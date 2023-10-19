@@ -12,7 +12,7 @@ export interface AppLayoutProps {
 export const AppLayout: FC<AppLayoutProps> = ({ children, title }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
-    <div className="h-screen flex overflow-hidden bg-base-200">
+    <div className="h-screen flex overflow-hidden bg-base-200/40">
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         <div className="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3">
