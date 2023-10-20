@@ -1,16 +1,23 @@
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getProjects } from "../../../client/queries/projects";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export interface ProjectsIndexProps {}
 
 export const ProjectsIndex: FC<ProjectsIndexProps> = (props) => {
+  const navigate = useNavigate();
+  const [,setCurrentProjectId] = useLocalStorage<string | null>('ar-current-project-id', null);
   const { data } = useQuery({
     queryKey: ['projects'],
     queryFn: () => getProjects(),
   });
+  const onSelectProject = (projectId: string) => {
+    setCurrentProjectId(projectId);
+    navigate('/app');
+  };
   return (
     <div className="w-screen h-screen bg-base-200 flex items-center justify-center">
       <div className="shadow-sm bg-white rounded-md max-w-xl w-full">
@@ -24,7 +31,7 @@ export const ProjectsIndex: FC<ProjectsIndexProps> = (props) => {
             <ul className="menu menu-lg w-full px-2 py-4">
               {data?.data.map(project => (
                 <li>
-                  <Link to={`/admin/projects/${project.id}`}>
+                  <a onClick={() => onSelectProject(project.id)}>
                     <div className="avatar">
                       <div className="w-12 rounded">
                         <img
@@ -34,7 +41,7 @@ export const ProjectsIndex: FC<ProjectsIndexProps> = (props) => {
                       </div>
                     </div>
                     {project.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>

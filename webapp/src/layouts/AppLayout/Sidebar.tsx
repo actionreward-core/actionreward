@@ -1,13 +1,22 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Cog6ToothIcon, HomeIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import React, { FC, Fragment } from "react";
+import React, { FC, Fragment, useEffect } from "react";
 import Logo from "../../assets/logo.png";
 import classNames from "classnames";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  ArrowPathRoundedSquareIcon,
+  BoltIcon,
+  DocumentTextIcon,
+  TrophyIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
+import { Project } from "../../types/project";
 
 export interface SidebarProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  project: Project;
 }
 
 const navigation = [
@@ -17,20 +26,59 @@ const navigation = [
     icon: HomeIcon,
   },
   {
+    name: "Schemas",
+    path: "/app/schemas",
+    icon: DocumentTextIcon,
+  },
+  {
+    name: "Rewards",
+    path: "/app/rewards",
+    icon: TrophyIcon,
+  },
+  {
+    name: "Actions",
+    path: "/app/actions",
+    icon: BoltIcon,
+  },
+  {
+    name: "Users",
+    path: "/app/users",
+    icon: UsersIcon,
+  },
+  {
     name: "Settings",
     path: "/app/settings",
     icon: Cog6ToothIcon,
   },
 ];
 
-export const Sidebar: FC<SidebarProps> = ({ open, setOpen }) => {
+export const Sidebar: FC<SidebarProps> = ({ open, setOpen, project }) => {
   const { pathname } = useLocation();
   const renderMenuContent = () => {
     return (
       <>
-        <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
+        <div className="flex-1 h-0 pt-5 pb-4">
           <div className="flex-shrink-0 flex items-center px-4">
             <img className="h-9 w-auto" src={Logo} alt="Workflow" />
+          </div>
+          <div className="flex items-center p-4 border-y mt-4 justify-between">
+            <div className="flex items-center overflow-hidden">
+              <div>
+                <div className="avatar mr-3 p-[4px]">
+                  <div className="w-8 rounded ring-gray-300 ring-2 ring-offset-base-100 ring-offset-1">
+                    <img src="https://placehold.co/400" />
+                  </div>
+                </div>
+              </div>
+              <div className="overflow-hidden w-full">
+                <div className="truncate" title={project.name}>{project.name}</div>
+              </div>
+            </div>
+            <div className="tooltip tooltip-right ml-2" data-tip="Change Project">
+              <Link className="btn btn-xs" to="/app/projects">
+                <ArrowPathRoundedSquareIcon className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
           <nav className="mt-5 px-2 space-y-1">
             {navigation.map((item) => (
@@ -120,7 +168,7 @@ export const Sidebar: FC<SidebarProps> = ({ open, setOpen }) => {
       </Transition.Root>
 
       <div className="hidden md:flex md:flex-shrink-0 border-r border-r-gray-200">
-        <div className="flex flex-col w-64">
+        <div className="flex flex-col w-72">
           <div className="flex flex-col h-0 flex-1 bg-white">
             {renderMenuContent()}
           </div>

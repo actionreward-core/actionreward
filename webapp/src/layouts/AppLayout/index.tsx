@@ -1,8 +1,10 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   Bars3Icon,
 } from "@heroicons/react/24/outline";
 import { Sidebar } from "./Sidebar";
+import { useCurrentProject } from "../../hooks/useCurrentProject";
+import { useNavigate } from "react-router-dom";
 
 export interface AppLayoutProps {
   title?: string;
@@ -11,9 +13,19 @@ export interface AppLayoutProps {
 
 export const AppLayout: FC<AppLayoutProps> = ({ children, title }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { project, isLoading: projectIsLoading } = useCurrentProject();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!projectIsLoading && !project) {
+      navigate('/app/projects');
+    }
+  }, [navigate, project, projectIsLoading]);
+  if (!project) {
+    return 'Loading...'; // TODO: use a loading spinner here
+  }
   return (
     <div className="h-screen flex overflow-hidden bg-base-200/40">
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} project={project} />
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         <div className="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3">
           <button
