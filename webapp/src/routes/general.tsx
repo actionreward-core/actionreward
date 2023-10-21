@@ -10,6 +10,7 @@ import { AppProjectsCreate } from "../pages/app/projects/ProjectsCreate.tsx";
 import { ProjectsIndex } from "../pages/app/projects/Index.tsx";
 import { ProjectSettingsPage } from "../pages/app/ProjectSettings.tsx";
 import { SchemasIndex } from "../pages/app/schemas/Index.tsx";
+import { SchemasCreatePage } from "../pages/app/schemas/SchemasCreate.tsx";
 
 export const general: RouteObject[] = [
   // ROUTES - START
@@ -48,6 +49,10 @@ export const general: RouteObject[] = [
   {
     path: '/app/schemas',
     element: <SchemasIndex />
-  }
+  },
+  {
+    path: '/app/schemas/create',
+    element: <SchemasCreatePage />
+  },
   // ROUTES - END
 ];
