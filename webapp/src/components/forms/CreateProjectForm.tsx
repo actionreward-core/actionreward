@@ -1,8 +1,10 @@
 import { Form, FormProps } from "../Form";
+import { ImageUploaderFormInput } from "./inputs/ImageUploaderFormInput";
 import { TextFormInput } from "./inputs/TextFormInput";
 
 export interface CreateProjectFormFields {
   name: string;
+  logo: string;
 }
 
 export interface CreateProjectFormProps
@@ -27,6 +29,7 @@ export function CreateProjectForm({
 }: CreateProjectFormProps) {
   return (
     <Form form={form} onSubmit={onSubmit}>
+      <ImageUploaderFormInput name="logo" label="Logo" previewHeight={80} previewWidth={80} />
       <TextFormInput name="name" label="Name" type="text" />
       {footer}
     </Form>

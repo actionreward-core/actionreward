@@ -7,11 +7,13 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowPathRoundedSquareIcon,
   BoltIcon,
+  Cog8ToothIcon,
   DocumentTextIcon,
   TrophyIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import { Project } from "../../types/project";
+import { getCIDLink } from "../../utils/web3Storage";
 
 export interface SidebarProps {
   open: boolean;
@@ -19,14 +21,40 @@ export interface SidebarProps {
   project: Project;
 }
 
-const navigation = [
+const AutomationIcon = (props: any) => {
+  return (
+    <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    fill="currentColor"
+    viewBox="0 0 256 256"
+  >
+    <path d="M247.96 80.792c-.01.107-.031.21-.046.317-.02.153-.04.306-.07.457-.024.125-.059.247-.09.37-.032.13-.061.26-.1.39-.037.12-.082.237-.124.355-.046.129-.089.258-.14.384-.046.108-.098.211-.148.317-.061.132-.12.265-.19.393-.051.098-.111.19-.167.284-.076.13-.15.261-.236.388-.066.098-.14.191-.21.286-.084.115-.165.231-.256.342-.116.141-.242.274-.367.406-.054.059-.102.12-.159.176l-40 40a8 8 0 01-11.314-11.314L220.687 88H176a40.046 40.046 0 00-40 40 56.063 56.063 0 01-56 56h-.907a36 36 0 110-16H80a40.046 40.046 0 0040-40 56.063 56.063 0 0156-56h44.687l-26.344-26.343a8 8 0 0111.314-11.314l40 40c.057.056.105.117.159.176.125.132.25.265.367.406.091.11.171.227.255.342.07.095.145.188.211.286.085.127.16.258.236.388.056.095.115.186.167.284.07.129.129.261.19.393.05.106.102.21.147.317.052.127.095.255.14.384.043.119.088.235.125.355.039.13.068.26.1.39.031.124.066.245.09.37.03.151.05.304.07.457.015.106.035.21.046.317a8.023 8.023 0 010 1.584z"></path>
+  </svg>
+  )
+}
+
+const generalNavigation = [
   {
     name: "Dashboard",
     path: "/app",
     icon: HomeIcon,
   },
   {
-    name: "Schemas",
+    name: "Triggered Actions",
+    path: "/app/actions",
+    icon: BoltIcon,
+  },
+  {
+    name: "Users",
+    path: "/app/users",
+    icon: UsersIcon,
+  },
+];
+
+const setupNavigation = [
+  {
+    name: "Action Schemas",
     path: "/app/schemas",
     icon: DocumentTextIcon,
   },
@@ -36,24 +64,37 @@ const navigation = [
     icon: TrophyIcon,
   },
   {
-    name: "Actions",
-    path: "/app/actions",
-    icon: BoltIcon,
+    name: "Automations",
+    path: "/app/automations",
+    icon: AutomationIcon,
   },
   {
-    name: "Users",
-    path: "/app/users",
-    icon: UsersIcon,
-  },
-  {
-    name: "Settings",
+    name: "Project Settings",
     path: "/app/settings",
-    icon: Cog6ToothIcon,
+    icon: Cog8ToothIcon,
   },
 ];
 
 export const Sidebar: FC<SidebarProps> = ({ open, setOpen, project }) => {
   const { pathname } = useLocation();
+  const renderLink =  (item: any) => (
+    <Link
+    key={item.name}
+    to={item.path}
+    className={classNames(
+      "group flex items-center px-2 py-2 text-base font-medium rounded-md",
+      item.path === pathname
+        ? "text-primary bg-gray-100"
+        : "text-gray-400 hover:bg-gray-100/80 hover:text-primary hover:opacity-70"
+    )}
+  >
+    <item.icon
+      className="mr-4 flex-shrink-0 h-6 w-6"
+      aria-hidden="true"
+    />
+    {item.name}
+  </Link>
+  );
   const renderMenuContent = () => {
     return (
       <>
@@ -66,7 +107,7 @@ export const Sidebar: FC<SidebarProps> = ({ open, setOpen, project }) => {
               <div>
                 <div className="avatar mr-3 p-[4px]">
                   <div className="w-8 rounded ring-gray-300 ring-2 ring-offset-base-100 ring-offset-1">
-                    <img src="https://placehold.co/400" />
+                    <img src={getCIDLink(project.logo)} />
                   </div>
                 </div>
               </div>
@@ -80,25 +121,17 @@ export const Sidebar: FC<SidebarProps> = ({ open, setOpen, project }) => {
               </Link>
             </div>
           </div>
-          <nav className="mt-5 px-2 space-y-1">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                className={classNames(
-                  "group flex items-center px-2 py-2 text-base font-medium rounded-md",
-                  item.path === pathname
-                    ? "text-primary bg-gray-100"
-                    : "text-gray-400 hover:bg-gray-100/80 hover:text-primary hover:opacity-70"
-                )}
-              >
-                <item.icon
-                  className="mr-4 flex-shrink-0 h-6 w-6"
-                  aria-hidden="true"
-                />
-                {item.name}
-              </Link>
-            ))}
+          <div className="p-4 pb-2">
+            <label className="text-xs font-semibold text-gray-500">LIVE DATA</label>
+          </div>
+          <nav className="px-2 space-y-1">
+            {generalNavigation.map(renderLink)}
+          </nav>
+          <div className="p-4 pb-2 mt-2">
+            <label className="text-xs font-semibold text-gray-500">SETUP</label>
+          </div>
+          <nav className="px-2 space-y-1">
+            {setupNavigation.map(renderLink)}
           </nav>
         </div>
         <div className="flex-shrink-0 flex border-t border-t-gray-200 p-4 text-white">

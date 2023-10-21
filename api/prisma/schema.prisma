@@ -24,6 +24,7 @@ model Project {
   ownerId       String
   owner         User                  @relation(fields: [ownerId], references: [id])
   name          String
+  logo          String?
   accessToken   String                @unique
   actionSchemas ProjectActionSchema[]
   users         ProjectUser[]

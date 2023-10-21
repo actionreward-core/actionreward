@@ -7,3 +7,11 @@ export const createProject = async ({ name }: { name: string }) => {
   });
   return data;
 }
+
+export const updateProject = async (id: string, { name, logo }: { name?: string, logo?: string }) => {
+  const { data } = await api.patch<Project>(`/projects/${id}`, {
+    name,
+    logo,
+  });
+  return data;
+}

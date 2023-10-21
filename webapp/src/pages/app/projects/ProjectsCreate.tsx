@@ -12,6 +12,7 @@ export interface AppProjectsCreateProps {}
 
 export interface CreateProjectVars {
   name: string;
+  logo: string;
 }
 
 export const AppProjectsCreate: FC<AppProjectsCreateProps> = () => {

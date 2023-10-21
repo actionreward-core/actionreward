@@ -41,7 +41,7 @@ export const Web3StorageImageUploader: FC<Web3StorageImageUploaderProps> = ({
     return getCIDLink(value);
   }, [value, imageHasError]);
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files[0].length === 0) {
+    if (!e.target.files) {
       return;
     }
     const [file] = e.target.files;
@@ -68,7 +68,7 @@ export const Web3StorageImageUploader: FC<Web3StorageImageUploaderProps> = ({
           <div role="status">
             <svg
               aria-hidden="true"
-              className="w-8 h-8 mr-2 text-base-100/80 animate-spin fill-primary/80"
+              className="w-8 h-8 text-base-100/80 animate-spin fill-primary/80"
               viewBox="0 0 100 101"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,7 @@ export const Web3StorageImageUploader: FC<Web3StorageImageUploaderProps> = ({
         {imageUrl ? (
           <img
             src={imageUrl}
-            className={classNames("rounded-lg", {
+            className={classNames("rounded-lg border", {
               "object-cover": fit === "cover",
               "object-fill": fit === "fill",
               "object-contain": fit === "contain",

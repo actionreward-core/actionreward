@@ -5,7 +5,7 @@ import { useMemo } from "react";
 
 export const useCurrentProject = () => {
   const [currentProjectId] = useLocalStorage('ar-current-project-id', null);
-  const { data: projects, isLoading } = useQuery({
+  const { data: projects, isLoading, refetch } = useQuery({
     queryKey: ['projects'],
     queryFn: getProjects,
   });
@@ -21,5 +21,6 @@ export const useCurrentProject = () => {
   return {
     project,
     isLoading,
+    refetch,
   }
 }
