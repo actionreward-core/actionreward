@@ -9,6 +9,7 @@ import { AppSignupPage } from "../pages/app/Signup.tsx";
 import { AppProjectsCreate } from "../pages/app/projects/ProjectsCreate.tsx";
 import { ProjectsIndex } from "../pages/app/projects/Index.tsx";
 import { ProjectSettingsPage } from "../pages/app/ProjectSettings.tsx";
+import { SchemasIndex } from "../pages/app/schemas/Index.tsx";
 
 export const general: RouteObject[] = [
   // ROUTES - START
@@ -43,6 +44,10 @@ export const general: RouteObject[] = [
   {
     path: '/app/settings',
     element: <ProjectSettingsPage />
+  },
+  {
+    path: '/app/schemas',
+    element: <SchemasIndex />
   }
   // ROUTES - END
 ];
