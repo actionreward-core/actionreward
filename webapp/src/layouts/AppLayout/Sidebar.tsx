@@ -14,6 +14,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Project } from "../../types/project";
 import { getCIDLink } from "../../utils/web3Storage";
+import { ProjectAvatar } from "../../components/ProjectAvatar";
 
 export interface SidebarProps {
   open: boolean;
@@ -105,11 +106,7 @@ export const Sidebar: FC<SidebarProps> = ({ open, setOpen, project }) => {
           <div className="flex items-center p-4 border-y mt-4 justify-between">
             <div className="flex items-center overflow-hidden">
               <div>
-                <div className="avatar mr-3 p-[4px]">
-                  <div className="w-8 rounded ring-gray-300 ring-2 ring-offset-base-100 ring-offset-1">
-                    <img src={getCIDLink(project.logo)} />
-                  </div>
-                </div>
+                <ProjectAvatar project={project} wrapperClassName="w-8" className="mr-3 p-[4px]" />
               </div>
               <div className="overflow-hidden w-full">
                 <div className="truncate" title={project.name}>{project.name}</div>

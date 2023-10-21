@@ -4,6 +4,7 @@ import { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getProjects } from "../../../client/queries/projects";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { ProjectAvatar } from "../../../components/ProjectAvatar";
 
 export interface ProjectsIndexProps {}
 
@@ -32,15 +33,12 @@ export const ProjectsIndex: FC<ProjectsIndexProps> = (props) => {
               {data?.data.map(project => (
                 <li>
                   <a onClick={() => onSelectProject(project.id)}>
-                    <div className="avatar">
-                      <div className="w-12 rounded">
-                        <img
-                          src="https://placehold.co/400"
-                          className="border overflow-hidden"
-                        />
+                    <div className="flex items-center">
+                    <ProjectAvatar project={project} wrapperClassName="w-8" />
+                      <div className="ml-4">
+                        {project.name}
                       </div>
                     </div>
-                    {project.name}
                   </a>
                 </li>
               ))}
