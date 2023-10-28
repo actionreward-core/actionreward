@@ -8,8 +8,12 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
+    const projectId = localStorage.getItem('ar-current-project-id');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    if (projectId) {
+      config.headers['X-Project-Id'] = JSON.parse(projectId);
     }
     return config;
   },

@@ -31,24 +31,25 @@ model Project {
 }
 
 model ProjectActionSchema {
-  id        String          @id @default(uuid())
-  projectId String
-  project   Project         @relation(fields: [projectId], references: [id])
-  name      String
-  key       String
-  data      Json?
-  actions   ProjectAction[]
+  id          String          @id @default(uuid())
+  projectId   String
+  project     Project         @relation(fields: [projectId], references: [id])
+  name        String
+  key         String
+  description String          @default("")
+  data        Json?
+  actions     ProjectAction[]
 
   @@unique([projectId, key])
 }
 
 model ProjectUser {
-  id            String          @id @default(uuid())
-  projectId     String
-  project       Project         @relation(fields: [projectId], references: [id])
-  userId        String
-  did           String
-  ProjectAction ProjectAction[]
+  id        String          @id @default(uuid())
+  projectId String
+  project   Project         @relation(fields: [projectId], references: [id])
+  userId    String
+  did       String
+  actions   ProjectAction[]
 
   @@unique([projectId, userId])
 }

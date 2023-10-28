@@ -5,17 +5,20 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { CreateSchemaForm, CreateSchemaFormFields } from "../../../components/forms/CreateSchemaForm";
+import { createSchema } from "../../../client/mutations/schemas";
+import { useNavigate } from "react-router-dom";
 
 export const SchemasCreatePage: FC = () => {
+  const navigate = useNavigate();
   const form = useForm<CreateSchemaFormFields>();
-  const updatePostMutation = useMutation({
-    mutationKey: ["updateProject"],
-    // eslint-disable-next-line @typescript-eslint/require-await
-    mutationFn: async (args: CreateSchemaFormFields) => console.log(args),
+  const createSchemaMutation = useMutation({
+    mutationKey: ["createSchema"],
+    mutationFn: createSchema,
   });
   const onSubmit = async (data: CreateSchemaFormFields) => {
-    await updatePostMutation.mutateAsync(data);
-    toast.success("Project Updated!");
+    await createSchemaMutation.mutateAsync(data);
+    toast.success("Schema Created!");
+    navigate('/app/schemas');
   };
   return (
     <AppLayout>

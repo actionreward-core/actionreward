@@ -1,15 +1,17 @@
 import { useFieldArray } from "react-hook-form";
 import { Form, FormProps } from "../Form";
+import slugify from 'slugify';
 // import { ImageUploaderFormInput } from "./inputs/ImageUploaderFormInput";
 import { TextAreaFormInput } from "./inputs/TextAreaFormInput";
 import { TextFormInput } from "./inputs/TextFormInput";
-import { ExclamationCircleIcon, PlusCircleIcon, TrashIcon } from "@heroicons/react/24/outline";
-import classNames from "classnames";
+import { PlusCircleIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useEffect } from "react";
 
 const FIELD_TYPE_OPTIONS = ['object', 'string', 'number', 'boolean', 'integer'];
 
 export interface CreateSchemaFormFields {
   name: string;
+  key: string;
   description: string;
   fields: {
     name: string;
@@ -44,12 +46,20 @@ export function CreateSchemaForm({
       name: "fields",
     }
   );
+  const watchFields = form.watch(['name']);
+
+  useEffect(() => {
+    if (watchFields[0]) {
+      form.setValue('key', slugify(watchFields[0], { lower: true, strict: true }));
+    }
+  }, [form, watchFields]);
   return (
     <Form form={form} onSubmit={onSubmit}>
       <h2 className="text-lg font-semibold mb-2">
         Action Info
       </h2>
       <TextFormInput name="name" label="Name" type="text" />
+      <TextFormInput name="key" label="Key" type="text" />
       <TextAreaFormInput name="description" label="Description" />
 
       <h2 className="text-lg font-semibold mb-2">
