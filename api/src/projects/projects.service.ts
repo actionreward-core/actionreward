@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaService } from 'src/prisma.service';
 import { PaginatorOptions, paginator } from 'src/common/helpers/paginator';
 import { randomBytes } from 'crypto';
 import { IssuerService } from 'src/issuer/issuer.service';
+import { IdentifyDto } from './dto/identify.dto';
 
 const generateProjectToken = () => randomBytes(32).toString('hex');
 
@@ -79,6 +80,32 @@ export class ProjectsService {
       where: {
         ownerId,
         id,
+      },
+    });
+  }
+
+  identify(id: string, identifyDto: IdentifyDto) {
+    const { userId, did } = identifyDto;
+    if (!userId) {
+      throw new BadRequestException('userId is required');
+    }
+    if (!did) {
+      throw new BadRequestException('did is required');
+    }
+    return this.prismaService.projectUser.upsert({
+      create: {
+        projectId: id,
+        userId,
+        did,
+      },
+      update: {
+        did,
+      },
+      where: {
+        projectId_userId: {
+          projectId: id,
+          userId,
+        },
       },
     });
   }
