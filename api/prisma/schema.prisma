@@ -20,14 +20,15 @@ model User {
 }
 
 model Project {
-  id            String                @id @default(uuid())
-  ownerId       String
-  owner         User                  @relation(fields: [ownerId], references: [id])
-  name          String
-  logo          String?
-  accessToken   String                @unique
-  actionSchemas ProjectActionSchema[]
-  users         ProjectUser[]
+  id               String                @id @default(uuid())
+  ownerId          String
+  owner            User                  @relation(fields: [ownerId], references: [id])
+  name             String
+  logo             String?
+  accessToken      String                @unique
+  issuerIdentifier String
+  actionSchemas    ProjectActionSchema[]
+  users            ProjectUser[]
 }
 
 model ProjectActionSchema {

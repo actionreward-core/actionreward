@@ -4,21 +4,27 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaService } from 'src/prisma.service';
 import { PaginatorOptions, paginator } from 'src/common/helpers/paginator';
 import { randomBytes } from 'crypto';
+import { IssuerService } from 'src/issuer/issuer.service';
 
 const generateProjectToken = () => randomBytes(32).toString('hex');
 
 @Injectable()
 export class ProjectsService {
-  constructor(private prismaService: PrismaService) { }
+  constructor(
+    private prismaService: PrismaService,
+    private issuerService: IssuerService,
+  ) {}
 
-  create(ownerId: string, createProjectDto: CreateProjectDto) {
+  async create(ownerId: string, createProjectDto: CreateProjectDto) {
     const { name } = createProjectDto;
     const accessToken = generateProjectToken();
+    const { identifier } = await this.issuerService.createIdentity();
     return this.prismaService.project.create({
       data: {
         name,
         ownerId,
         accessToken,
+        issuerIdentifier: identifier,
       },
     });
   }

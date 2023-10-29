@@ -3,6 +3,7 @@ import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { AuthModule } from './auth/auth.module';
 import { SchemasModule } from './schemas/schemas.module';
+import { IssuerService } from './issuer/issuer.service';
 
 // IMPORTS - START
 // IMPORTS - END
@@ -23,6 +24,6 @@ import { SchemasModule } from './schemas/schemas.module';
   providers: [
     // MODULE PROVIDERS - START
     // MODULE PROVIDERS - END
-  ],
+  IssuerService],
 })
 export class AppModule {}
