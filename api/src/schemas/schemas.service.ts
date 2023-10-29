@@ -44,6 +44,13 @@ export class SchemasService {
     );
 
     // Uploading JSON LD
+    const fieldProps = {};
+    data.fields.forEach((field) => {
+      fieldProps[field.name] = {
+        '@id': `vocab:${field.name}`,
+        '@type': `xsd:${field.type}`,
+      };
+    });
     const jsonldData = {
       '@context': [
         {
@@ -58,8 +65,9 @@ export class SchemasService {
               '@protected': true,
               id: '@id',
               type: '@type',
-              vocab: `${baseUrl}/${filename}-vocab.md`,
+              vocab: `${baseUrl}/${filename}-vocab.md#${name}`,
               xsd: 'http://www.w3.org/2001/XMLSchema#',
+              ...fieldProps,
             },
           },
         },
