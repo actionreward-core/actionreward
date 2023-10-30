@@ -11,6 +11,7 @@ import { ProjectsIndex } from "../pages/app/projects/Index.tsx";
 import { ProjectSettingsPage } from "../pages/app/ProjectSettings.tsx";
 import { SchemasIndex } from "../pages/app/schemas/Index.tsx";
 import { SchemasCreatePage } from "../pages/app/schemas/SchemasCreate.tsx";
+import { RewardPage } from "../pages/Reward.tsx";
 
 export const general: RouteObject[] = [
   // ROUTES - START
@@ -53,6 +54,10 @@ export const general: RouteObject[] = [
   {
     path: '/app/schemas/create',
     element: <SchemasCreatePage />
+  },
+  {
+    path: '/rewards/:rewardId',
+    element: <RewardPage />
   },
   // ROUTES - END
 ];
