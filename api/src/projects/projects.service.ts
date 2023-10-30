@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -12,10 +11,9 @@ import { randomBytes } from 'crypto';
 import { IssuerService } from 'src/issuer/issuer.service';
 import { IdentifyDto } from './dto/identify.dto';
 import { SendActionDto } from './dto/send-action.dto';
-import { NotFoundError } from 'rxjs';
 import { SchemaData } from 'src/schemas/schemas.types';
-import { JsonObject } from '@prisma/client/runtime/library';
-import { type } from 'os';
+import * as QRCode from 'qrcode';
+import { StorageService } from 'src/storage/storage.service';
 
 const generateProjectToken = () => randomBytes(32).toString('hex');
 
@@ -24,6 +22,7 @@ export class ProjectsService {
   constructor(
     private prismaService: PrismaService,
     private issuerService: IssuerService,
+    private storage: StorageService,
   ) {}
 
   async create(ownerId: string, createProjectDto: CreateProjectDto) {
@@ -136,9 +135,23 @@ export class ProjectsService {
           key: actionKey,
         },
       },
+      include: {
+        project: true,
+      },
     });
     if (!schema) {
       throw new NotFoundException('Could not find action by the provided key');
+    }
+    const projectUser = await this.prismaService.projectUser.findUnique({
+      where: {
+        projectId_userId: {
+          projectId: id,
+          userId,
+        },
+      },
+    });
+    if (!projectUser) {
+      throw new NotFoundException(`Could not find userId=${userId}`);
     }
     const schemaData = schema.data as unknown as SchemaData;
     const claimValues: any = {};
@@ -181,6 +194,41 @@ export class ProjectsService {
       }
       claimValues[field.name] = value;
     });
-    console.log(claimValues);
+    const identifier = schema.project.issuerIdentifier;
+    const res = await this.issuerService.createClaim({
+      identifier,
+      expiration: 1903357766, // TODO: add ability to configure the expiration per action
+      type: schema.schemaTypeName,
+      credentialSchema: schema.schemaUrl,
+      credentialSubject: {
+        id: projectUser.did,
+        ...claimValues,
+      },
+    });
+
+    const claimQrCodeData = await this.issuerService.getClaimQrCodeData({
+      identifier,
+      id: res.id,
+    });
+
+    const qrcodeBuffer = await QRCode.toBuffer(
+      JSON.stringify(claimQrCodeData),
+      {
+        width: 800,
+      },
+    );
+    const path = `qrcodes/${schema.id}-${res.id}`;
+    await this.storage.bucket('actionreward').file(path).save(qrcodeBuffer, {
+      predefinedAcl: 'publicRead',
+    });
+    const qrcode = `${process.env.CDN_BASE_URL}/${path}`;
+    return this.prismaService.projectAction.create({
+      data: {
+        projectActionSchemaId: schema.id,
+        projectUserId: projectUser.id,
+        claimId: res.id,
+        qrcode,
+      },
+    });
   }
 }

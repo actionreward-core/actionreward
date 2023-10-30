@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
-import { CreateClaimInput, CreateIdentifyResponse } from './issuer.types';
+import {
+  CreateClaimInput,
+  CreateClaimResponse,
+  CreateIdentifyResponse,
+} from './issuer.types';
 
 @Injectable()
 export class IssuerService {
@@ -34,9 +38,22 @@ export class IssuerService {
     identifier,
     ...input
   }: CreateClaimInput & { identifier: string }) {
-    const { data } = await this.client.post<CreateIdentifyResponse>(
+    const { data } = await this.client.post<CreateClaimResponse>(
       `/v1/${identifier}/claims`,
       input,
+    );
+    return data;
+  }
+
+  async getClaimQrCodeData({
+    id,
+    identifier,
+  }: {
+    identifier: string;
+    id: string;
+  }) {
+    const { data } = await this.client.get<CreateClaimResponse>(
+      `/v1/${identifier}/claims/${id}/qrcode`,
     );
     return data;
   }

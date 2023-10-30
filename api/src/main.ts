@@ -8,9 +8,11 @@ import { AppModule } from './app.module';
 // INTERNAL IMPORTS - END
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bodyParser: false });
 
   app.enableCors();
+
+  app.setGlobalPrefix('/api');
 
   // APP SETUP - START
   const config = new DocumentBuilder()

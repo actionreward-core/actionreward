@@ -29,6 +29,7 @@ model Project {
   issuerIdentifier String
   actionSchemas    ProjectActionSchema[]
   users            ProjectUser[]
+  rewards          ProjectReward[]
 }
 
 model ProjectActionSchema {
@@ -42,6 +43,7 @@ model ProjectActionSchema {
   description    String          @default("")
   data           Json?
   actions        ProjectAction[]
+  rewards        ProjectReward[]
 
   @@unique([projectId, key])
 }
@@ -63,4 +65,23 @@ model ProjectAction {
   user                  ProjectUser         @relation(fields: [projectUserId], references: [id])
   projectActionSchemaId String
   schema                ProjectActionSchema @relation(fields: [projectActionSchemaId], references: [id])
+  claimId               String
+  qrcode                String
+}
+
+model ProjectReward {
+  id                    String              @id @default(uuid())
+  projectId             String
+  project               Project             @relation(fields: [projectId], references: [id])
+  type                  RewardType
+  conditionField        String
+  conditionOperator     String
+  conditionValue        String
+  projectActionSchemaId String
+  schema                ProjectActionSchema @relation(fields: [projectActionSchemaId], references: [id])
+}
+
+enum RewardType {
+  GIFT_CARD
+  CUSTOM_HTTP
 }

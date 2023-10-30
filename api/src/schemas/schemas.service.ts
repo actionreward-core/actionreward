@@ -3,9 +3,9 @@ import { CreateSchemaDto } from './dto/create-schema.dto';
 import { PrismaService } from '../prisma.service';
 import { Prisma } from '@prisma/client';
 import { PaginatorOptions, paginator } from 'src/common/helpers/paginator';
-import { Storage } from '@google-cloud/storage';
 import { pascalCase, headerCase } from 'change-case-all';
 import * as fs from 'fs';
+import { StorageService } from 'src/storage/storage.service';
 
 const schemaTemplate = JSON.parse(
   fs.readFileSync('./templates/schema.json', 'utf8'),
@@ -13,13 +13,7 @@ const schemaTemplate = JSON.parse(
 
 @Injectable()
 export class SchemasService {
-  storage: Storage;
-
-  constructor(private prisma: PrismaService) {
-    this.storage = new Storage({
-      keyFilename: './gcloud-key.json',
-    });
-  }
+  constructor(private prisma: PrismaService, private storage: StorageService) {}
 
   private async uploadPublicSchemaFile(path: string, content: string) {
     return this.storage.bucket('actionreward').file(path).save(content, {

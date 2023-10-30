@@ -37,3 +37,4 @@ lerna-debug.log*
 .env
 
 gcloud-key.json
+.nestjs_repl_history

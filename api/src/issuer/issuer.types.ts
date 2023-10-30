@@ -17,3 +17,7 @@ export interface CreateClaimInput {
   credentialSubject: any;
   expiration: number;
 }
+
+export interface CreateClaimResponse {
+  id: string;
+}
