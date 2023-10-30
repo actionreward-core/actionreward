@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { PrismaService } from 'src/prisma.service';
@@ -6,6 +11,11 @@ import { PaginatorOptions, paginator } from 'src/common/helpers/paginator';
 import { randomBytes } from 'crypto';
 import { IssuerService } from 'src/issuer/issuer.service';
 import { IdentifyDto } from './dto/identify.dto';
+import { SendActionDto } from './dto/send-action.dto';
+import { NotFoundError } from 'rxjs';
+import { SchemaData } from 'src/schemas/schemas.types';
+import { JsonObject } from '@prisma/client/runtime/library';
+import { type } from 'os';
 
 const generateProjectToken = () => randomBytes(32).toString('hex');
 
@@ -108,5 +118,69 @@ export class ProjectsService {
         },
       },
     });
+  }
+
+  async sendAction(id: string, sendActionDto: SendActionDto) {
+    const { userId, actionKey, properties } = sendActionDto;
+    if (!userId) {
+      throw new BadRequestException('userId is required');
+    }
+    if (!properties) {
+      throw new BadRequestException('properties is required');
+    }
+    // Validate field types
+    const schema = await this.prismaService.projectActionSchema.findUnique({
+      where: {
+        projectId_key: {
+          projectId: id,
+          key: actionKey,
+        },
+      },
+    });
+    if (!schema) {
+      throw new NotFoundException('Could not find action by the provided key');
+    }
+    const schemaData = schema.data as unknown as SchemaData;
+    const claimValues: any = {};
+    schemaData.fields.forEach((field) => {
+      const value = properties[field.name];
+      if (field.required && !value) {
+        throw new BadRequestException(`Field '${field.name}' is required`);
+      }
+      switch (field.type) {
+        case 'string':
+          if (typeof value !== 'string') {
+            throw new BadRequestException(
+              `Field '${field.name}' should be string`,
+            );
+          }
+          break;
+        case 'boolean':
+          if (typeof value !== 'boolean') {
+            throw new BadRequestException(
+              `Field '${field.name}' should be boolean`,
+            );
+          }
+          break;
+        case 'number':
+          const isNumber = typeof value === 'number';
+          if (!isNumber) {
+            throw new BadRequestException(
+              `Field '${field.name}' should be a number`,
+            );
+          }
+          break;
+        case 'integer':
+          const isInt = typeof value === 'number' && Number.isInteger(value);
+          if (!isInt) {
+            throw new BadRequestException(
+              `Field '${field.name}' should be integer`,
+            );
+          }
+          break;
+      }
+      claimValues[field.name] = value;
+    });
+    console.log(claimValues);
   }
 }

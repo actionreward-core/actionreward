@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
-import { CreateIdentifyResponse } from './issuer.types';
+import { CreateClaimInput, CreateIdentifyResponse } from './issuer.types';
 
 @Injectable()
 export class IssuerService {
@@ -30,4 +30,14 @@ export class IssuerService {
     return data;
   }
 
+  async createClaim({
+    identifier,
+    ...input
+  }: CreateClaimInput & { identifier: string }) {
+    const { data } = await this.client.post<CreateIdentifyResponse>(
+      `/v1/${identifier}/claims`,
+      input,
+    );
+    return data;
+  }
 }

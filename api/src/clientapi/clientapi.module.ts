@@ -11,6 +11,6 @@ import { IssuerService } from 'src/issuer/issuer.service';
 })
 export class ClientApiModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ProjectMiddleware).forRoutes('*');
+    consumer.apply(ProjectMiddleware).forRoutes('/sdk/*');
   }
 }

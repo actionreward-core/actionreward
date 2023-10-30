@@ -80,7 +80,8 @@ export class SchemasService {
 
     // Uploading Schema
     const schemaData = { ...schemaTemplate };
-    schemaData.$metadata.uris.jsonSchema = `${baseUrl}/${filename}.json`;
+    const schemaUrl = `${baseUrl}/${filename}.json`;
+    schemaData.$metadata.uris.jsonSchema = schemaUrl;
     schemaData.$metadata.uris.jsonLdContext = `${baseUrl}/${filename}.jsonld`;
     data.fields.forEach((field) => {
       const { credentialSubject } = schemaData.properties;
@@ -96,6 +97,11 @@ export class SchemasService {
       `${path}/${filename}.json`,
       JSON.stringify(schemaData, null, 4),
     );
+
+    return {
+      name,
+      schemaUrl,
+    };
   }
 
   async create(createSchemaDto: CreateSchemaDto) {
@@ -113,7 +119,20 @@ export class SchemasService {
       },
     });
 
-    await this.uploadSchemaFiles(actionSchema.id, createSchemaDto);
+    const { name: schemaTypeName, schemaUrl } = await this.uploadSchemaFiles(
+      actionSchema.id,
+      createSchemaDto,
+    );
+
+    return this.prisma.projectActionSchema.update({
+      where: {
+        id: actionSchema.id,
+      },
+      data: {
+        schemaTypeName,
+        schemaUrl,
+      },
+    });
   }
 
   findAll({ projectId }: { projectId: string }, opts: PaginatorOptions) {
