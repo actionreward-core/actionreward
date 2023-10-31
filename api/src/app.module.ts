@@ -18,6 +18,7 @@ import { JsonBodyMiddleware } from './common/middlewares/json-body.middleware';
 import { ConnectModule } from './connect/connect.module';
 import { ActionsModule } from './actions/actions.module';
 import { ProjectUsersModule } from './project-users/project-users.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 // IMPORTS - START
 // IMPORTS - END
@@ -35,6 +36,7 @@ import { ProjectUsersModule } from './project-users/project-users.module';
     ConnectModule,
     ActionsModule,
     ProjectUsersModule,
+    DashboardModule,
     // MODULE IMPORTS - END
   ],
   controllers: [

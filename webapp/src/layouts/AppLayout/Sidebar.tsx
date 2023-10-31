@@ -33,7 +33,7 @@ const generalNavigation = [
     icon: BoltIcon,
   },
   {
-    name: "Users",
+    name: "Connected Users",
     path: "/app/users",
     icon: UsersIcon,
   },
