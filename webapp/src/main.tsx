@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import { Web3ModalProvider } from "./providers/Web3ModalProvider";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { routes } from "./routes";
 import "./index.css";
 
@@ -25,7 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <ToastifyProvider>
           <QueryClientProvider client={queryClient}>
             <RouterProvider router={router} />
-            <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+            {/* <ReactQueryDevtools initialIsOpen={false} position="bottom-right" /> */}
           </QueryClientProvider>
         </ToastifyProvider>
       </ContractContextProvider>
