@@ -43,6 +43,7 @@ export const RewardsIndex: FC<SchemasIndexProps> = () => {
               <th>Name</th>
               <th>Type</th>
               <th>Condition</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -56,6 +57,15 @@ export const RewardsIndex: FC<SchemasIndexProps> = () => {
                 </td>
                 <td>
                   <strong>{reward.conditionField} </strong>{OPERATORS_NAME[reward.conditionOperator]} <strong>{reward.conditionValue}</strong>
+                </td>
+                <td>
+                  <Link
+                    to={`/rewards/${reward.id}`}
+                    className="link no-underline text-primary"
+                    target="_blank"
+                  >
+                    View Claim Page
+                  </Link>
                 </td>
               </tr>
             ))}
