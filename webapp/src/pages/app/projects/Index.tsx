@@ -8,7 +8,7 @@ import { ProjectAvatar } from "../../../components/ProjectAvatar";
 
 export interface ProjectsIndexProps {}
 
-export const ProjectsIndex: FC<ProjectsIndexProps> = (props) => {
+export const ProjectsIndex: FC<ProjectsIndexProps> = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [,setCurrentProjectId] = useLocalStorage<string | null>('ar-current-project-id', null);

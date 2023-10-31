@@ -5,11 +5,6 @@ import RewardExample from "../assets/reward-example.png";
 import { Pricing } from "../components/Pricing";
 import { Link } from "react-router-dom";
 
-const stats = [
-  { label: "Detectors", value: "88" },
-  { label: "Execution Time", value: "< 1s" },
-];
-
 const footerNavigation = {
   main: [],
   social: [

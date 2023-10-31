@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+ 
 import { FC } from "react";
 import { AppLayout } from "../../../layouts/AppLayout";
 import { useQuery } from "@tanstack/react-query";

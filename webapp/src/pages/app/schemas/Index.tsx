@@ -1,6 +1,6 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { AppLayout } from "../../../layouts/AppLayout";
-import { CodeBracketIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getSchemas } from "../../../client/queries/schemas";

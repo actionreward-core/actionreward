@@ -8,7 +8,7 @@ export interface RewardProps {
   
 }
 
-export const RewardPage: FC<RewardProps> = (props) => {
+export const RewardPage: FC<RewardProps> = () => {
   const [statusError, setStatusError] = useState<string>();
   const [couponCode, setCouponCode] = useState<string>();
   const [qrcodeBase64, setQrcodeBase64] = useState<string>();

@@ -1,9 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Cog6ToothIcon, HomeIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import React, { FC, Fragment, useEffect } from "react";
+import { HomeIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import React, { FC, Fragment } from "react";
 import Logo from "../../assets/logo.png";
 import classNames from "classnames";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   ArrowPathRoundedSquareIcon,
   BoltIcon,

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
+ 
 import { FC } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormGroup } from "../../FormGroup";
