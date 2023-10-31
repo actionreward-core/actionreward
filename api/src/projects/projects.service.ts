@@ -26,12 +26,13 @@ export class ProjectsService {
   ) {}
 
   async create(ownerId: string, createProjectDto: CreateProjectDto) {
-    const { name } = createProjectDto;
+    const { name, logo } = createProjectDto;
     const accessToken = generateProjectToken();
     const { identifier } = await this.issuerService.createIdentity();
     return this.prismaService.project.create({
       data: {
         name,
+        logo,
         ownerId,
         accessToken,
         issuerIdentifier: identifier,

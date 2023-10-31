@@ -16,6 +16,8 @@ import { CacheModule } from './cache/cache.module';
 import { RawBodyMiddleware } from './common/middlewares/raw-body.middleware';
 import { JsonBodyMiddleware } from './common/middlewares/json-body.middleware';
 import { ConnectModule } from './connect/connect.module';
+import { ActionsModule } from './actions/actions.module';
+import { ProjectUsersModule } from './project-users/project-users.module';
 
 // IMPORTS - START
 // IMPORTS - END
@@ -31,6 +33,8 @@ import { ConnectModule } from './connect/connect.module';
     RewardsModule,
     CacheModule,
     ConnectModule,
+    ActionsModule,
+    ProjectUsersModule,
     // MODULE IMPORTS - END
   ],
   controllers: [

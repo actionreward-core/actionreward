@@ -1,5 +1,5 @@
 import { PlusIcon } from "@heroicons/react/24/solid";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getProjects } from "../../../client/queries/projects";
@@ -9,6 +9,7 @@ import { ProjectAvatar } from "../../../components/ProjectAvatar";
 export interface ProjectsIndexProps {}
 
 export const ProjectsIndex: FC<ProjectsIndexProps> = (props) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [,setCurrentProjectId] = useLocalStorage<string | null>('ar-current-project-id', null);
   const { data } = useQuery({
@@ -16,6 +17,7 @@ export const ProjectsIndex: FC<ProjectsIndexProps> = (props) => {
     queryFn: () => getProjects(),
   });
   const onSelectProject = (projectId: string) => {
+    queryClient.clear();
     setCurrentProjectId(projectId);
     navigate('/app');
   };

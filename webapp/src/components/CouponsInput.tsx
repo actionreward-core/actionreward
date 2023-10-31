@@ -136,6 +136,7 @@ export const CouponsInput: FC<CouponsInputProps> = ({
             <button
               className="btn btn-block mt-4"
               onClick={downloadCsvTemplate}
+              type="button"
             >
               Download CSV template
             </button>
