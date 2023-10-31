@@ -12,6 +12,7 @@ export interface Scoreboard {
   victory: boolean;
   teamA: ScoreBoardRow[];
   teamB: ScoreBoardRow[];
+  qrcode: string;
 }
 
 

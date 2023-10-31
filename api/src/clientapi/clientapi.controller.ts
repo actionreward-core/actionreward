@@ -28,9 +28,13 @@ export class ClientApiController {
     @Body() body: SendActionDto,
     @Req() req: Express.Request & { project: Project },
   ) {
-    await this.projectService.sendAction(req.project.id, body);
+    const { claimId, qrcode } = await this.projectService.sendAction(
+      req.project.id,
+      body,
+    );
     return {
-      status: true,
+      claimId,
+      qrcode,
     };
   }
 }

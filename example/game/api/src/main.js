@@ -2,7 +2,12 @@ import express from 'express'
 import cors from 'cors';
 import { faker } from '@faker-js/faker';
 import { getBearerTokenFromReq } from './utils/getBearerTokenFromReq.js';
+import { ActionReward } from './sdk/index.js';
 
+
+const actionReward = ActionReward({
+  token: 'e9f981fb4a84add2b5ce2e9237df33acdb887e8be3d53f6d8475bec190b5af92',
+});
 
 const app = express()
 app.use(cors());
@@ -64,7 +69,7 @@ app.get('/me', (req, res) => {
 });
 
 
-app.post('/play-match', (req, res) => {
+app.post('/play-match', async (req, res) => {
   const meStats = fakePlayerMatchStats(req.me.nickname);
   const teamA = [
     meStats,
@@ -78,10 +83,25 @@ app.post('/play-match', (req, res) => {
   ].sort((a, b) => b.score - a.score);
   const victory = teamA[0].score > teamB[0].score;
 
+  const action = await actionReward.sendAction({
+    userId: 1,
+    actionKey: 'match-scoreboard-2',
+    properties: {
+      kills: meStats.kills,
+      deaths: meStats.deaths,
+      kd: meStats.kd,
+      stage: 'dust',
+      victory,
+    }
+  });
+
+  const { qrcode } = action;
+
   res.json({
     victory,
     teamA,
     teamB,
+    qrcode,
   });
 });
 

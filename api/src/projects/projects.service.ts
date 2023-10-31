@@ -157,7 +157,7 @@ export class ProjectsService {
     const claimValues: any = {};
     schemaData.fields.forEach((field) => {
       const value = properties[field.name];
-      if (field.required && !value) {
+      if (field.required && typeof value === 'undefined') {
         throw new BadRequestException(`Field '${field.name}' is required`);
       }
       switch (field.type) {
