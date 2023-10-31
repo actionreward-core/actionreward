@@ -6,6 +6,8 @@ import { randomUUID } from 'crypto';
 import * as QRCode from 'qrcode';
 import { ProjectActionSchema, ProjectReward } from '@prisma/client';
 import { SchemaData } from 'src/schemas/schemas.types';
+import { PaginatorOptions, paginator } from 'src/common/helpers/paginator';
+import { CreateRewardDto } from './dto/create-reward.dto';
 
 @Injectable()
 export class RewardsService {
@@ -13,6 +15,18 @@ export class RewardsService {
     private prismaService: PrismaService,
     private cacheService: CacheService,
   ) {}
+
+  findAll({ projectId }: { projectId: string }, opts: PaginatorOptions) {
+    return paginator({
+      model: this.prismaService.projectReward,
+      args: {
+        where: {
+          projectId,
+        },
+      },
+      opts,
+    });
+  }
 
   private static getConditionTypedValue(
     reward: ProjectReward & { schema: ProjectActionSchema },
@@ -87,6 +101,7 @@ export class RewardsService {
     const qrcodeBase64 = await QRCode.toDataURL(JSON.stringify(request));
 
     return {
+      reward,
       request,
       sessionId,
       qrcodeBase64,
@@ -133,8 +148,84 @@ export class RewardsService {
 
     const userId = authResponse.from;
 
-    // TODO: add reward claim logic here
+    const coupon = await this.prismaService.projectRewardCoupon.findFirst({
+      where: {
+        claimedAt: null,
+        projectRewardId: session.rewardId,
+      },
+    });
+
+    const statusCacheKey = `reward:auth:session:${sessionId}:status`;
+
+    if (!coupon) {
+      await this.cacheService.put(
+        statusCacheKey,
+        JSON.stringify({
+          error: 'No code available',
+        }),
+      );
+      return authResponse;
+    }
+
+    await this.cacheService.put(
+      statusCacheKey,
+      JSON.stringify({
+        couponCode: coupon.code,
+      }),
+    );
+
+    await this.prismaService.projectRewardCoupon.update({
+      where: {
+        id: coupon.id,
+      },
+      data: {
+        claimedAt: new Date(),
+      },
+    });
 
     return authResponse;
+  }
+
+  async create(createSchemaDto: CreateRewardDto) {
+    const {
+      projectId,
+      schemaId,
+      name,
+      conditionField,
+      conditionOperator,
+      conditionValue,
+      coupons,
+    } = createSchemaDto;
+
+    const reward = await this.prismaService.projectReward.create({
+      data: {
+        projectId,
+        projectActionSchemaId: schemaId,
+        name,
+        conditionField,
+        conditionOperator,
+        conditionValue,
+        type: 'GIFT_CARD', // Currently, for the hackathon scope we have only the gift card option
+        coupons: {
+          createMany: {
+            data: coupons.map((code) => ({
+              code,
+            })),
+          },
+        },
+      },
+    });
+
+    return reward;
+  }
+
+  async getClaimStatus(sessionId: string) {
+    const statusJson = await this.cacheService.get(
+      `reward:auth:session:${sessionId}:status`,
+    );
+    if (!statusJson) {
+      throw new BadRequestException('Session not available');
+    }
+    return JSON.parse(statusJson);
   }
 }
