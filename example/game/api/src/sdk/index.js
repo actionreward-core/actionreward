@@ -8,8 +8,16 @@ export const ActionReward = ({ token }) => {
     },
   });
   return {
-    generateConnectQrCode: ({ userId }) => {
+    connectAuthRequest: async ({ userId }) => {
+      const { data } = await client.post('/connect-auth-request', {
+        userId: `${userId}`,
+      });
+      return data;
+    },
 
+    getUser: async (userId) => {
+      const { data } = await client.get(`/user/${userId}`);
+      return data;
     },
 
     sendAction: async ({ actionKey, userId, properties }) => {

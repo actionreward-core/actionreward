@@ -60,12 +60,23 @@ app.post('/signin', (req, res) => {
   });
 });
 
-app.get('/me', (req, res) => {
+app.get('/me', async (req, res) => {
   if (!req.me) {
     res.status(401).send({ error: 'Not logged' });
     return;
   }
-  res.send(req.me);
+  const me = { ...req.me };
+  try {
+    const { did } = await actionReward.getUser(me.id);
+    me.did = did;
+  } catch (error) {
+    console.log('User does not have did yet');
+  }
+  if (!me.did) {
+    const authRequest = await actionReward.connectAuthRequest({ userId: req.me.id });
+    me.qrcodeBase64 = authRequest.qrcodeBase64;
+  }
+  res.send(me);
 });
 
 
@@ -84,7 +95,7 @@ app.post('/play-match', async (req, res) => {
   const victory = teamA[0].score > teamB[0].score;
 
   const action = await actionReward.sendAction({
-    userId: 1,
+    userId: req.me.id,
     actionKey: 'match-scoreboard-2',
     properties: {
       kills: meStats.kills,

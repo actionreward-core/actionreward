@@ -15,6 +15,7 @@ import { RewardsModule } from './rewards/rewards.module';
 import { CacheModule } from './cache/cache.module';
 import { RawBodyMiddleware } from './common/middlewares/raw-body.middleware';
 import { JsonBodyMiddleware } from './common/middlewares/json-body.middleware';
+import { ConnectModule } from './connect/connect.module';
 
 // IMPORTS - START
 // IMPORTS - END
@@ -29,6 +30,7 @@ import { JsonBodyMiddleware } from './common/middlewares/json-body.middleware';
     ClientApiModule,
     RewardsModule,
     CacheModule,
+    ConnectModule,
     // MODULE IMPORTS - END
   ],
   controllers: [
@@ -46,10 +48,16 @@ export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(RawBodyMiddleware)
-      .forRoutes({
-        path: '/rewards/callback',
-        method: RequestMethod.POST,
-      })
+      .forRoutes(
+        {
+          path: '/rewards/callback',
+          method: RequestMethod.POST,
+        },
+        {
+          path: '/connect/callback',
+          method: RequestMethod.POST,
+        },
+      )
       .apply(JsonBodyMiddleware)
       .forRoutes('*');
   }

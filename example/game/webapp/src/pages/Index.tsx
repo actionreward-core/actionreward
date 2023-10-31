@@ -18,6 +18,7 @@ export const IndexPage: FC = () => {
   const { data: me, refetch: refetchMe } = useQuery({
     queryKey: ["me"],
     queryFn: getMe,
+    refetchInterval: 5000,
   });
   const signinMutation = useMutation({
     mutationKey: ["signIn"],
@@ -42,8 +43,10 @@ export const IndexPage: FC = () => {
   };
 
   const getRewardUrl = () => {
-    return `${import.meta.env.VITE_ACTION_REWARDS_BASE_URL || ''}/rewards/${import.meta.env.VITE_REWARD_ID || ''}`;
-  }
+    return `${import.meta.env.VITE_ACTION_REWARDS_BASE_URL || ""}/rewards/${
+      import.meta.env.VITE_REWARD_ID || ""
+    }`;
+  };
 
   const renderTeamScoreboard = (team: ScoreBoardRow[], className: string) => (
     <div className="overflow-x-auto mb-2">
@@ -144,7 +147,11 @@ export const IndexPage: FC = () => {
                 <div>
                   Get beta access with a score above 1000
                   <div className="mt-16">
-                    <a className="btn btn-primary btn-block" target="_blank" href={getRewardUrl()}>
+                    <a
+                      className="btn btn-primary btn-block"
+                      target="_blank"
+                      href={getRewardUrl()}
+                    >
                       Claim Reward
                     </a>
                   </div>
@@ -154,14 +161,26 @@ export const IndexPage: FC = () => {
           </div>
         )}
 
-        <div className="mt-8 flex justify-center">
-          <button
-            className="btn btn-primary btn-block"
-            onClick={onPlayMatchClick}
-          >
-            Play Match
-          </button>
-        </div>
+        {me.did ? (
+          <div className="mt-8 flex justify-center">
+            <button
+              className="btn btn-primary btn-block"
+              onClick={onPlayMatchClick}
+            >
+              Play Match
+            </button>
+          </div>
+        ) : (
+          <div>
+            <div className="text-center my-8">
+              Connect your PolygonID account
+            </div>
+            <img src={me.qrcodeBase64} />
+            <div className="flex justify-center mt-4">
+              <PolygonIdLogo />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
