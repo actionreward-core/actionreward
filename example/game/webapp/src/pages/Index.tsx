@@ -36,7 +36,7 @@ export const IndexPage: FC = () => {
   };
   const logout = () => {
     localStorage.removeItem("game-access-token");
-    refetchMe();
+    window.location.reload();
   };
   const onPlayMatchClick = async () => {
     const scoreboard = await playMatchMutation.mutateAsync();
