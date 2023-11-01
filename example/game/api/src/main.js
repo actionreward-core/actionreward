@@ -4,7 +4,13 @@ import { faker } from '@faker-js/faker';
 import { getBearerTokenFromReq } from './utils/getBearerTokenFromReq.js';
 import { ActionReward } from './sdk/index.js';
 
+process.on('uncaughtException', function (err) {
+  console.error(err);
+  console.log("Node NOT Exiting...");
+});
 
+
+// Step 1 - Creating the ActionReward SDK instance
 const actionReward = ActionReward({
   token: process.env.PROJECT_TOKEN,
 });
@@ -67,12 +73,14 @@ app.get('/api/me', async (req, res) => {
   }
   const me = { ...req.me };
   try {
+    // Step 2 - Checking if the logged user on game already is connected with ActionRewards
     const { did } = await actionReward.getUser(me.id);
     me.did = did;
   } catch (error) {
     console.log('User does not have did yet');
   }
   if (!me.did) {
+    // Step 3 - When user is not connected yet, we generate a connect QR Code
     const authRequest = await actionReward.connectAuthRequest({ userId: req.me.id });
     me.qrcodeBase64 = authRequest.qrcodeBase64;
   }
@@ -94,6 +102,7 @@ app.post('/api/play-match', async (req, res) => {
   ].sort((a, b) => b.score - a.score);
   const victory = teamA[0].score > teamB[0].score;
 
+  // Step 4 - Every end of a match, we send an action to ActionRewards
   const action = await actionReward.sendAction({
     userId: req.me.id,
     actionKey: 'match-scoreboard',
