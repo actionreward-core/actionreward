@@ -18,7 +18,7 @@ export const RewardsCreatePage: FC = () => {
   const onSubmit = async (data: CreateRewardFormFields) => {
     await createRewardMutation.mutateAsync(data);
     toast.success("Schema Created!");
-    navigate('/app/schemas');
+    navigate('/app/rewards');
   };
   return (
     <AppLayout>

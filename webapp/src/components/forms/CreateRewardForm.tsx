@@ -79,7 +79,6 @@ export function CreateRewardForm({
       const schema = schemas?.data.find(s => s.id === schemaId);
       const fieldOptions = (schema?.data.fields || []).map(f => f.name);
       setFieldOptions(fieldOptions);
-      form.setValue('conditionField', fieldOptions[0]);
     }
   }, [schemas?.data, watchFields]);
   useEffect(() => {

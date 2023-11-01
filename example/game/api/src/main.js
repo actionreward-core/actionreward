@@ -4,9 +4,15 @@ import { faker } from '@faker-js/faker';
 import { getBearerTokenFromReq } from './utils/getBearerTokenFromReq.js';
 import { ActionReward } from './sdk/index.js';
 
+process.on('uncaughtException', function (err) {
+  console.error(err);
+  console.log("Node NOT Exiting...");
+});
 
+
+// Step 1 - Creating the ActionReward SDK instance
 const actionReward = ActionReward({
-  token: 'e9f981fb4a84add2b5ce2e9237df33acdb887e8be3d53f6d8475bec190b5af92',
+  token: process.env.PROJECT_TOKEN,
 });
 
 const app = express()
@@ -45,7 +51,7 @@ app.use((req, res, next) => {
 });
 
 
-app.post('/signin', (req, res) => {
+app.post('/api/signin', (req, res) => {
   const user = {
     id: faker.string.uuid(),
     nickname: faker.internet.userName(),
@@ -60,16 +66,29 @@ app.post('/signin', (req, res) => {
   });
 });
 
-app.get('/me', (req, res) => {
+app.get('/api/me', async (req, res) => {
   if (!req.me) {
     res.status(401).send({ error: 'Not logged' });
     return;
   }
-  res.send(req.me);
+  const me = { ...req.me };
+  try {
+    // Step 2 - Checking if the logged user on game already is connected with ActionRewards
+    const { did } = await actionReward.getUser(me.id);
+    me.did = did;
+  } catch (error) {
+    console.log('User does not have did yet');
+  }
+  if (!me.did) {
+    // Step 3 - When user is not connected yet, we generate a connect QR Code
+    const authRequest = await actionReward.connectAuthRequest({ userId: req.me.id });
+    me.qrcodeBase64 = authRequest.qrcodeBase64;
+  }
+  res.send(me);
 });
 
 
-app.post('/play-match', async (req, res) => {
+app.post('/api/play-match', async (req, res) => {
   const meStats = fakePlayerMatchStats(req.me.nickname);
   const teamA = [
     meStats,
@@ -83,9 +102,10 @@ app.post('/play-match', async (req, res) => {
   ].sort((a, b) => b.score - a.score);
   const victory = teamA[0].score > teamB[0].score;
 
+  // Step 4 - Every end of a match, we send an action to ActionRewards
   const action = await actionReward.sendAction({
-    userId: 1,
-    actionKey: 'match-scoreboard-2',
+    userId: req.me.id,
+    actionKey: 'match-scoreboard',
     properties: {
       kills: meStats.kills,
       deaths: meStats.deaths,

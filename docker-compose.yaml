@@ -1,0 +1,48 @@
+services:
+  db:
+    container_name: actionreward-db
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: actionreward
+      POSTGRESQL_FSYNC: "off"
+      PGDATA: /data/postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./db-data:/data/postgres
+    restart: unless-stopped
+  api:
+    container_name: actionreward-api
+    image: actionreward-api
+    build:
+      context: ./api
+    env_file:
+      - ./.env-api
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./tmp:/usr/src/app/tmp
+  webapp:
+    container_name: actionreward-webapp
+    image: actionreward-webapp
+    build:
+      context: ./webapp
+      args:
+        - VITE_WEB3_STORAGE_TOKEN=${VITE_WEB3_STORAGE_TOKEN}
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+  nginx:
+    container_name: actionreward-nginx
+    image: actionreward-nginx
+    build:
+      context: ./nginx
+    ports:
+      - 9090:80
+    depends_on:
+      - api
+      - webapp

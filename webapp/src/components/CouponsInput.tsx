@@ -2,7 +2,7 @@
 import { DragEventHandler, FC, useState } from "react";
 import * as Papa from "papaparse";
 import { FileUploader } from "react-drag-drop-files";
-import { UserGroupIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { XCircleIcon } from "@heroicons/react/24/outline";
 import { TicketIcon } from "@heroicons/react/24/solid";
 
 type CsvData = CsvDataRow[];
@@ -47,7 +47,7 @@ export const CouponsInput: FC<CouponsInputProps> = ({
     const reader = new FileReader();
     reader.onload = (e) => {
       const csvData = e.target!.result as string;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+       
       Papa.parse(csvData, {
         complete: (results) => {
           onCsvParsed(results.data as unknown as CsvData);
@@ -136,6 +136,7 @@ export const CouponsInput: FC<CouponsInputProps> = ({
             <button
               className="btn btn-block mt-4"
               onClick={downloadCsvTemplate}
+              type="button"
             >
               Download CSV template
             </button>

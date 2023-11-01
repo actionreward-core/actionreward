@@ -7,6 +7,16 @@ import { getRewards } from "../../../client/queries/rewards";
 
 export interface SchemasIndexProps {}
 
+const OPERATORS_NAME: any = {
+  $eq: 'equals to',
+  $ne: 'not equals to',
+  $lt: 'less than',
+  $gt: 'greater than',
+  $in: 'in',
+  $nin: 'not in',
+};
+
+
 export const RewardsIndex: FC<SchemasIndexProps> = () => {
   const { data: rewards } = useQuery({
     queryKey: ['getRewards'],
@@ -32,28 +42,40 @@ export const RewardsIndex: FC<SchemasIndexProps> = () => {
             <tr className="bg-gray-100">
               <th>Name</th>
               <th>Type</th>
-              <th>Supply</th>
+              <th>Condition</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {rewards?.data.map(reward => (
               <tr>
                 <td>
-                  <Link
-                    to={`/app/schemas/123`}
-                    className="link no-underline text-primary"
-                  >
-                    {reward.name}
-                  </Link>
+                  {reward.name}
                 </td>
-                <td>{reward.type}</td>
                 <td>
-                  500
+                  {reward.type === 'GIFT_CARD' ? 'Gift Card': 'Custom'}
+                </td>
+                <td>
+                  <strong>{reward.conditionField} </strong>{OPERATORS_NAME[reward.conditionOperator]} <strong>{reward.conditionValue}</strong>
+                </td>
+                <td>
+                  <Link
+                    to={`/rewards/${reward.id}`}
+                    className="link no-underline text-primary"
+                    target="_blank"
+                  >
+                    View Claim Page
+                  </Link>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        {rewards?.data.length === 0 && (
+          <div className="w-full flex items-center justify-center p-24 border-dashed border-2 text-gray-500">
+            No reward created yet
+          </div>
+        )}
       </div>
     </AppLayout>
   );

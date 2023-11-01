@@ -2,14 +2,22 @@ import axios from 'axios';
 
 export const ActionReward = ({ token }) => {
   const client = axios.create({
-    baseURL: 'http://localhost:3000/api/sdk',
+    baseURL: process.env.SDK_BASE_URL ?? 'http://localhost:3000/api/sdk',
     headers: {
       'X-PROJECT-TOKEN': token,
     },
   });
   return {
-    generateConnectQrCode: ({ userId }) => {
+    connectAuthRequest: async ({ userId }) => {
+      const { data } = await client.post('/connect-auth-request', {
+        userId: `${userId}`,
+      });
+      return data;
+    },
 
+    getUser: async (userId) => {
+      const { data } = await client.get(`/user/${userId}`);
+      return data;
     },
 
     sendAction: async ({ actionKey, userId, properties }) => {

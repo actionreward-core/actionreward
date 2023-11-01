@@ -40,7 +40,7 @@ export function CreateSchemaForm({
     </div>
   ),
 }: CreateSchemaFormProps) {
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+  const { fields, append, remove } = useFieldArray(
     {
       control: form.control,
       name: "fields",

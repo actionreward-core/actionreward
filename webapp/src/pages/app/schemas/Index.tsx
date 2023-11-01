@@ -1,6 +1,6 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { AppLayout } from "../../../layouts/AppLayout";
-import { CodeBracketIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getSchemas } from "../../../client/queries/schemas";
@@ -40,24 +40,28 @@ export const SchemasIndex: FC<SchemasIndexProps> = () => {
             {schemas?.data.map(schema => (
               <tr>
                 <td>
-                  <Link
-                    to={`/app/schemas/123`}
-                    className="link no-underline text-primary"
-                  >
-                    {schema.name}
-                  </Link>
+                {schema.name}
                 </td>
                 <td>{schema.key}</td>
                 <td>{schema.description}</td>
-                <td className="text-center">
-                  <button className="btn btn-sm btn-square">
-                    <CodeBracketIcon className="w-4 h-4" />
-                  </button>
+                <td>
+                  <Link
+                    to={schema.schemaUrl || ''}
+                    className="link no-underline text-primary"
+                    target="_blank"
+                  >
+                    View Schema JSON
+                  </Link>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        {schemas?.data.length === 0 && (
+          <div className="w-full flex items-center justify-center p-24 border-dashed border-2 text-gray-500">
+            No schema created yet
+          </div>
+        )}
       </div>
     </AppLayout>
   );

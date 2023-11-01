@@ -1,9 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Cog6ToothIcon, HomeIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import React, { FC, Fragment, useEffect } from "react";
+import { HomeIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import React, { FC, Fragment } from "react";
 import Logo from "../../assets/logo.png";
 import classNames from "classnames";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   ArrowPathRoundedSquareIcon,
   BoltIcon,
@@ -13,26 +13,12 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import { Project } from "../../types/project";
-import { getCIDLink } from "../../utils/web3Storage";
 import { ProjectAvatar } from "../../components/ProjectAvatar";
 
 export interface SidebarProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   project: Project;
-}
-
-const AutomationIcon = (props: any) => {
-  return (
-    <svg
-    {...props}
-    xmlns="http://www.w3.org/2000/svg"
-    fill="currentColor"
-    viewBox="0 0 256 256"
-  >
-    <path d="M247.96 80.792c-.01.107-.031.21-.046.317-.02.153-.04.306-.07.457-.024.125-.059.247-.09.37-.032.13-.061.26-.1.39-.037.12-.082.237-.124.355-.046.129-.089.258-.14.384-.046.108-.098.211-.148.317-.061.132-.12.265-.19.393-.051.098-.111.19-.167.284-.076.13-.15.261-.236.388-.066.098-.14.191-.21.286-.084.115-.165.231-.256.342-.116.141-.242.274-.367.406-.054.059-.102.12-.159.176l-40 40a8 8 0 01-11.314-11.314L220.687 88H176a40.046 40.046 0 00-40 40 56.063 56.063 0 01-56 56h-.907a36 36 0 110-16H80a40.046 40.046 0 0040-40 56.063 56.063 0 0156-56h44.687l-26.344-26.343a8 8 0 0111.314-11.314l40 40c.057.056.105.117.159.176.125.132.25.265.367.406.091.11.171.227.255.342.07.095.145.188.211.286.085.127.16.258.236.388.056.095.115.186.167.284.07.129.129.261.19.393.05.106.102.21.147.317.052.127.095.255.14.384.043.119.088.235.125.355.039.13.068.26.1.39.031.124.066.245.09.37.03.151.05.304.07.457.015.106.035.21.046.317a8.023 8.023 0 010 1.584z"></path>
-  </svg>
-  )
 }
 
 const generalNavigation = [
@@ -47,7 +33,7 @@ const generalNavigation = [
     icon: BoltIcon,
   },
   {
-    name: "Users",
+    name: "Connected Users",
     path: "/app/users",
     icon: UsersIcon,
   },
@@ -63,11 +49,6 @@ const setupNavigation = [
     name: "Rewards",
     path: "/app/rewards",
     icon: TrophyIcon,
-  },
-  {
-    name: "Automations",
-    path: "/app/automations",
-    icon: AutomationIcon,
   },
   {
     name: "Project Settings",

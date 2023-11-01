@@ -1,7 +1,15 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { Project } from '@prisma/client';
+import { ConnectService } from 'src/connect/connect.service';
 import { PrismaService } from 'src/prisma.service';
-import { IdentifyDto } from 'src/projects/dto/identify.dto';
 import { SendActionDto } from 'src/projects/dto/send-action.dto';
 import { ProjectsService } from 'src/projects/projects.service';
 
@@ -10,18 +18,8 @@ export class ClientApiController {
   constructor(
     private prismaService: PrismaService,
     private projectService: ProjectsService,
+    private connectService: ConnectService,
   ) {}
-
-  @Post('/identify')
-  async identify(
-    @Body() body: IdentifyDto,
-    @Req() req: Express.Request & { project: Project },
-  ) {
-    await this.projectService.identify(req.project.id, body);
-    return {
-      status: true,
-    };
-  }
 
   @Post('/send-action')
   async sendAction(
@@ -35,6 +33,36 @@ export class ClientApiController {
     return {
       claimId,
       qrcode,
+    };
+  }
+
+  @Post('/connect-auth-request')
+  async connect(
+    @Body() { userId }: { userId: string },
+    @Req() req: Express.Request & { project: Project },
+  ) {
+    return this.connectService.getConnectAuthRequest(req.project.id, userId);
+  }
+
+  @Get('/user/:id')
+  async getUser(
+    @Param('id') id: string,
+    @Req() req: Express.Request & { project: Project },
+  ) {
+    const projectUser = await this.prismaService.projectUser.findUnique({
+      where: {
+        projectId_userId: {
+          projectId: req.project.id,
+          userId: id,
+        },
+      },
+    });
+    if (!projectUser) {
+      throw new NotFoundException('User not found');
+    }
+    return {
+      did: projectUser.did,
+      userId: projectUser.userId,
     };
   }
 }
