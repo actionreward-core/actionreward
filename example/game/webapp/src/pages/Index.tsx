@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { FC, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import { signIn } from "../client/mutations/signin";
 import { getMe } from "../client/queries/me";
 import {
@@ -43,9 +44,7 @@ export const IndexPage: FC = () => {
   };
 
   const getRewardUrl = () => {
-    return `${import.meta.env.VITE_ACTION_REWARDS_BASE_URL || ""}/rewards/${
-      import.meta.env.VITE_REWARD_ID || ""
-    }`;
+    return import.meta.env.VITE_CLAIM_REWARD_URL || "";
   };
 
   const renderTeamScoreboard = (team: ScoreBoardRow[], className: string) => (
@@ -145,7 +144,7 @@ export const IndexPage: FC = () => {
               </div>
               <div className="flex items-center ml-8 bg-gray-800 border border-gray-700 rounded-lg p-8 mt-2">
                 <div>
-                  Get beta access with a score above 1000
+                  Get beta access with a <strong>kills</strong> above <strong>10</strong>
                   <div className="mt-16">
                     <a
                       className="btn btn-primary btn-block"

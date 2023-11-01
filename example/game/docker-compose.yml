@@ -1,0 +1,28 @@
+services:
+  api:
+    container_name: actionreward-example-api
+    image: actionreward-example-api
+    build:
+      context: ./api
+    env_file:
+      - ./.env-api
+    volumes:
+      - ./tmp:/usr/src/app/tmp
+  webapp:
+    container_name: actionreward-example-webapp
+    image: actionreward-example-webapp
+    build:
+      context: ./webapp
+      args:
+        - VITE_CLAIM_REWARD_URL=${VITE_CLAIM_REWARD_URL}
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+  nginx:
+    container_name: actionreward-example-nginx
+    image: actionreward-example-nginx
+    build:
+      context: ./nginx
+    ports:
+      - 9191:80
+    depends_on:
+      - api
+      - webapp

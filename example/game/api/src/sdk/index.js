@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const ActionReward = ({ token }) => {
   const client = axios.create({
-    baseURL: 'http://localhost:3000/api/sdk',
+    baseURL: process.env.SDK_BASE_URL ?? 'http://localhost:3000/api/sdk',
     headers: {
       'X-PROJECT-TOKEN': token,
     },

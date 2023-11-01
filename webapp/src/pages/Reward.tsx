@@ -80,7 +80,7 @@ export const RewardPage: FC<RewardProps> = () => {
             </div>
           </div>
           {couponCode ? (
-            <div>
+            <div className="p-4 border border-gray-500 border-dashed rounded-lg text-lg font-bold">
               {couponCode}
             </div>
           ): (
